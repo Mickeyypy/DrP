@@ -4,7 +4,7 @@ import time
 from ultralytics import YOLO
 
 # เปิดการเชื่อมต่อกับ Arduino (เปลี่ยนพอร์ตตามอุปกรณ์ของคุณ เช่น 'COM3' หรือ '/dev/ttyUSB0')
-arduino = serial.Serial(port='COM4', baudrate=9600, timeout=1)
+arduino = serial.Serial(port='COM6', baudrate=115200, timeout=1)
 time.sleep(2)  # รอให้ Arduino พร้อม
 
 # โหลดโมเดล YOLO

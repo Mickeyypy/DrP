@@ -1,7 +1,7 @@
 int ledPin = 3; // ใช้ LED บนบอร์ด
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   pinMode(ledPin, OUTPUT);
 }
 
