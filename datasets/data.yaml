@@ -1,13 +1,13 @@
-train: ../train/images
-val: ../valid/images
-test: ../test/images
+train: D:/DrP/datasets/train/images
+val: D:/DrP/datasets/valid/images
+test: D:/DrP/datasets/test/images
 
-nc: 1
-names: ['cup']
+nc: 3
+names: ['Paper', 'Rock', 'Scissors']
 
 roboflow:
-  workspace: helo-world
-  project: objects-detection-ua1pr
-  version: 1
-  license: CC BY 4.0
-  url: https://universe.roboflow.com/helo-world/objects-detection-ua1pr/dataset/1
+  workspace: roboflow-58fyf
+  project: rock-paper-scissors-sxsw
+  version: 14
+  license: Private
+  url: https://universe.roboflow.com/roboflow-58fyf/rock-paper-scissors-sxsw/dataset/14

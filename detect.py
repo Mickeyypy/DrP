@@ -1,42 +1,32 @@
 import cv2
-import serial  # ใช้สื่อสารกับ Arduino
-import time
-from ultralytics import YOLO
+import numpy as np
 
-# เปิดการเชื่อมต่อกับ Arduino (เปลี่ยนพอร์ตตามอุปกรณ์ของคุณ เช่น 'COM3' หรือ '/dev/ttyUSB0')
-arduino = serial.Serial(port='COM6', baudrate=115200, timeout=1)
-time.sleep(2)  # รอให้ Arduino พร้อม
-
-# โหลดโมเดล YOLO
-model = YOLO("yolo11n.pt")
-
-# เปิดกล้อง
-cap = cv2.VideoCapture(0)
-
-while cap.isOpened():
-    ret, frame = cap.read()
-    if not ret:
-        break
-
-    # รัน YOLO
-    results = model(frame)
-
+def process_image(image_path):
+    # โหลดภาพ
+    image = cv2.imread(image_path)
+    if image is None:
+        print("ไม่สามารถโหลดภาพได้ ตรวจสอบพาธไฟล์อีกครั้ง")
+        return
+    
+    # แปลงเป็น Black and White (Binary)
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    _, black_and_white = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
+    
+    # แปลงเป็น Gray Scale
+    gray_image = gray.copy()
+    
+    # Half Black and White และ Half Color
+    halfbw = image.copy()
+    halfbw[:, :image.shape[1]//2] = cv2.cvtColor(gray[:, :image.shape[1]//2], cv2.COLOR_GRAY2BGR)
+    
     # แสดงผลลัพธ์
-    annotated_frame = results[0].plot()
-    cv2.imshow("YOLO Detection", annotated_frame)
+    cv2.imshow('Original Image', image)
+    cv2.imshow('Black and White', black_and_white)
+    cv2.imshow('Gray Scale', gray_image)
+    cv2.imshow('Half BW and Half Color', halfbw)
+    
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
-    # ตรวจจับวัตถุ (เช่น "cup") แล้วส่งคำสั่งไป Arduino
-    for obj in results[0].boxes.cls:
-        class_name = model.names[int(obj)]  # ชื่อคลาสของวัตถุ
-        if class_name == "cup":
-            arduino.write(b'1')  # ส่ง '1' ไปให้ Arduino
-            print("Cup detected! Sending signal to Arduino")
-
-    # กด 'q' เพื่อออก
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-
-# ปิดการเชื่อมต่อ
-cap.release()
-cv2.destroyAllWindows()
-arduino.close()
+# เรียกใช้งานฟังก์ชันโดยใส่พาธภาพที่ต้องการ
+process_image('Image/Screenshot_1.png')
